@@ -3,11 +3,11 @@ package auth
 import (
 	"errors"
 	"time"
-
+	"tibia-backend/helpers"
 	"github.com/dgrijalva/jwt-go"
 )
 
-var jwtKey = []byte("supersecretkey")
+var jwtKey = []byte(helpers.GetEnv("JWT_KEY"))
 
 type JWTClaim struct {
 	Name  string `json:"name"`
