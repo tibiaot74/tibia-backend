@@ -2,29 +2,23 @@ package main
 
 import (
 	"fmt"
-	"os"
 
 	"tibia-backend/auth"
 	"tibia-backend/controllers"
 	"tibia-backend/database"
+        "tibia-backend/helpers"
 
 	"github.com/gin-gonic/gin"
 )
 
-func getEnv(envVarName string) string {
-	if envVarName == "" {
-  		return os.Getenv(envVarName)
-  	}
-	panic(fmt.Sprintf("The environment variable named %s must be set!", envVarName))
-}
 
 func main() {
 	// Get Database Env Vars
-	dbUser := getEnv("DB_USER")
-	dbPassword := getEnv("DB_PASSWORD")
-	dbHost := getEnv("DB_HOST")
-	dbPort := getEnv("DB_PORT")
-	dbName := getEnv("DB_NAME")
+	dbUser := helpers.GetEnv("DB_USER")
+	dbPassword := helpers.GetEnv("DB_PASSWORD")
+	dbHost := helpers.GetEnv("DB_HOST")
+	dbPort := helpers.GetEnv("DB_PORT")
+	dbName := helpers.GetEnv("DB_NAME")
 	// Initialize Database
 	
 	db_connection_string := fmt.Sprintf(
