@@ -20,7 +20,6 @@ func main() {
 	dbPort := helpers.GetEnv("DB_PORT")
 	dbName := helpers.GetEnv("DB_NAME")
 	// Initialize Database
-
 	db_connection_string := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?parseTime=true",
 		dbUser,
