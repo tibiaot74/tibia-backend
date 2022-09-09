@@ -6,11 +6,11 @@ import (
 	"tibia-backend/auth"
 	"tibia-backend/controllers"
 	"tibia-backend/database"
-        "tibia-backend/helpers"
+	"tibia-backend/helpers"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
-
 
 func main() {
 	// Get Database Env Vars
@@ -20,9 +20,9 @@ func main() {
 	dbPort := helpers.GetEnv("DB_PORT")
 	dbName := helpers.GetEnv("DB_NAME")
 	// Initialize Database
-	
+
 	db_connection_string := fmt.Sprintf(
-	        "%s:%s@tcp(%s:%s)/%s?parseTime=true",
+		"%s:%s@tcp(%s:%s)/%s?parseTime=true",
 		dbUser,
 		dbPassword,
 		dbHost,
@@ -37,6 +37,7 @@ func main() {
 
 func initRouter() *gin.Engine {
 	router := gin.Default()
+	router.Use(cors.Default())
 	api := router.Group("/api")
 	{
 		api.POST("/token", controllers.GenerateToken)
