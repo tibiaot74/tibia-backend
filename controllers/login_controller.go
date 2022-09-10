@@ -1,40 +1,50 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"tibia-backend/auth"
-	"tibia-backend/database"
-	"tibia-backend/models"
+	"tibia-backend/repository"
 	"tibia-backend/requests"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
+
+func CheckPassword(InputPassword *string, storedPassword *string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(*storedPassword), []byte(*InputPassword))
+	fmt.Println(*InputPassword)
+	fmt.Println(*storedPassword)
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
+}
 
 func GenerateToken(context *gin.Context) {
 	var request requests.GenerateTokenRequest
-	var account models.Account
+
 	if err := context.ShouldBindJSON(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		context.Abort()
 		return
 	}
-
-	// check if email exists and password is correct
-	record := database.Instance.Where("email = ?", request.Email).First(&account)
-	if record.Error != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": record.Error.Error()})
+	account, err := repository.GetAccount(request.Name)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		context.Abort()
 		return
 	}
 
-	credentialError := account.CheckPassword(request.Password)
-	if credentialError != nil {
+	if err := CheckPassword(&request.Password, &account.Password); err != nil {
 		context.JSON(http.StatusUnauthorized, gin.H{"error": "invalid credentials"})
 		context.Abort()
 		return
 	}
 
-	tokenString, err := auth.GenerateJWT(account.Email, account.Name)
+	tokenString, err := auth.GenerateJWT(account.Name, account.Name)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		context.Abort()

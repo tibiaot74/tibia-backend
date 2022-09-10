@@ -2,9 +2,10 @@ package auth
 
 import (
 	"errors"
-	"time"
 	"tibia-backend/helpers"
-	"github.com/dgrijalva/jwt-go"
+	"time"
+
+	"github.com/golang-jwt/jwt/v4"
 )
 
 var jwtKey = []byte(helpers.GetEnv("JWT_KEY"))
@@ -12,16 +13,17 @@ var jwtKey = []byte(helpers.GetEnv("JWT_KEY"))
 type JWTClaim struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
-	jwt.StandardClaims
+	jwt.RegisteredClaims
 }
 
 func GenerateJWT(email string, name string) (tokenString string, err error) {
-	expirationTime := time.Now().Add(1 * time.Hour)
+	var expirationTimeInHour time.Duration = 1
 	claims := &JWTClaim{
 		Email: email,
 		Name:  name,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(expirationTimeInHour * time.Hour)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -42,11 +44,11 @@ func ValidateToken(signedToken string) (err error) {
 	}
 	claims, ok := token.Claims.(*JWTClaim)
 	if !ok {
-		err = errors.New("Couldn't parse claims")
+		err = errors.New("couldn't parse claims")
 		return
 	}
-	if claims.ExpiresAt < time.Now().Local().Unix() {
-		err = errors.New("Token expired")
+	if claims.ExpiresAt.Unix() < time.Now().Local().Unix() {
+		err = errors.New("token expired")
 		return
 	}
 	return

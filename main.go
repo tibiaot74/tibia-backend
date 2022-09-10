@@ -39,7 +39,7 @@ func initRouter() *gin.Engine {
 	router.Use(cors.Default())
 	api := router.Group("/api")
 	{
-		api.POST("/token", controllers.GenerateToken)
+		api.POST("/login", controllers.GenerateToken)
 		api.POST("/account", controllers.RegisterAccount)
 		api.GET("/health", controllers.HealthCheck)
 		secured := api.Group("/secured").Use(auth.Auth())
