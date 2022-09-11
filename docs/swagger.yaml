@@ -1,0 +1,153 @@
+basePath: /api
+consumes:
+- application/json
+definitions:
+  requests.GenerateTokenRequest:
+    properties:
+      name:
+        type: integer
+      password:
+        type: string
+    type: object
+  requests.GenerateTokenResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  requests.RegisterAccountRequest:
+    properties:
+      email:
+        type: string
+      name:
+        minimum: 100000
+        type: integer
+      password:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  requests.RegisterAccountResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  requests.RegisterPlayerRequest:
+    properties:
+      name:
+        type: string
+      sex:
+        type: integer
+    required:
+    - name
+    - sex
+    type: object
+  requests.RegisterPlayerResponse:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      sex:
+        type: integer
+    required:
+    - name
+    - sex
+    type: object
+host: localhost:7474
+info:
+  contact: {}
+  description: This is a backend API created using Go(lang) to serve a otserver Tibia
+    website
+  title: Tibia backend for frontend
+  version: "1.0"
+paths:
+  /account:
+    post:
+      parameters:
+      - description: Params to create account
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.RegisterAccountRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/requests.RegisterAccountResponse'
+      summary: Create user account
+      tags:
+      - Account/Login
+  /health:
+    get:
+      responses:
+        "200":
+          description: Healthy!
+          schema:
+            type: string
+      summary: Check if API is healthy and responding to requests
+      tags:
+      - Helpers
+  /login:
+    post:
+      parameters:
+      - description: Params to login
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.GenerateTokenRequest'
+      responses:
+        "200":
+          description: Healthy!
+          schema:
+            $ref: '#/definitions/requests.GenerateTokenResponse'
+      summary: Login account
+      tags:
+      - Account/Login
+  /secured/ping:
+    get:
+      responses:
+        "200":
+          description: pong!
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Check if secured API auth is working
+      tags:
+      - Helpers
+  /secured/player:
+    post:
+      parameters:
+      - description: Params to create player
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.RegisterPlayerRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/requests.RegisterPlayerResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create player
+      tags:
+      - Account/Login
+produces:
+- application/json
+securityDefinitions:
+  ApiKeyAuth:
+    description: You can issue this token when you log in (route /api/login)
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

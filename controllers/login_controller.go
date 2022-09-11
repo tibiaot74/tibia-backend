@@ -24,6 +24,11 @@ func CheckPassword(InputPassword *string, storedPassword *string) error {
 	return nil
 }
 
+// @tags    Account/Login
+// @summary Login account
+// @param   request body     requests.GenerateTokenRequest  true "Params to login"
+// @success 200     {object} requests.GenerateTokenResponse "Healthy!"
+// @router  /login [post]
 func GenerateToken(context *gin.Context) {
 	var request requests.GenerateTokenRequest
 

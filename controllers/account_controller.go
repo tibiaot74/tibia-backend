@@ -21,6 +21,11 @@ func HashPassword(providedPassword *string) error {
 	return nil
 }
 
+// @tags    Account/Login
+// @summary Create user account
+// @param   request body     requests.RegisterAccountRequest true "Params to create account"
+// @success 200     {object} requests.RegisterAccountResponse
+// @router  /account [post]
 func RegisterAccount(context *gin.Context) {
 	var request requests.RegisterAccountRequest
 	if err := context.ShouldBindJSON(&request); err != nil {
@@ -54,6 +59,12 @@ func RegisterAccount(context *gin.Context) {
 	context.JSON(http.StatusCreated, response)
 }
 
+// @tags     Account/Login
+// @summary  Create player
+// @Security ApiKeyAuth
+// @param    request body     requests.RegisterPlayerRequest true "Params to create player"
+// @success  200     {object} requests.RegisterPlayerResponse
+// @router   /secured/player [post]
 func RegisterPlayer(context *gin.Context) {
 	var request requests.RegisterPlayerRequest
 	if err := context.ShouldBindJSON(&request); err != nil {
