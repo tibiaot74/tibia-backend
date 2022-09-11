@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"tibia-backend/auth"
 	"tibia-backend/repository"
 	"tibia-backend/requests"
@@ -31,7 +32,7 @@ func GenerateToken(context *gin.Context) {
 		context.Abort()
 		return
 	}
-	account, err := repository.GetAccount(request.Name)
+	account, err := repository.GetAccount(strconv.Itoa(request.Name))
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		context.Abort()

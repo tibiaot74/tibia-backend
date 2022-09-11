@@ -3,13 +3,9 @@ package main
 import (
 	"fmt"
 
-	"tibia-backend/auth"
-	"tibia-backend/controllers"
 	"tibia-backend/database"
 	"tibia-backend/helpers"
-
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
+	"tibia-backend/routes"
 )
 
 func main() {
@@ -30,22 +26,6 @@ func main() {
 	)
 	database.Connect(db_connection_string)
 	// Initialize Router
-	router := initRouter()
+	router := routes.InitRouter()
 	router.Run(":7474")
-}
-
-func initRouter() *gin.Engine {
-	router := gin.Default()
-	router.Use(cors.Default())
-	api := router.Group("/api")
-	{
-		api.POST("/login", controllers.GenerateToken)
-		api.POST("/account", controllers.RegisterAccount)
-		api.GET("/health", controllers.HealthCheck)
-		secured := api.Group("/secured").Use(auth.Auth())
-		{
-			secured.GET("/ping", controllers.Ping)
-		}
-	}
-	return router
 }

@@ -5,6 +5,7 @@ import (
 	"tibia-backend/helpers"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -52,4 +53,17 @@ func ValidateToken(signedToken string) (err error) {
 		return
 	}
 	return
+}
+
+func GetTokenClaims(context *gin.Context) JWTClaim {
+	tokenString := context.GetHeader("Authorization")
+	token, _ := jwt.ParseWithClaims(
+		tokenString,
+		&JWTClaim{},
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(jwtKey), nil
+		},
+	)
+	claims, _ := token.Claims.(*JWTClaim)
+	return *claims
 }

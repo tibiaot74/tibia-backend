@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
-	"tibia-backend/models"
+	"strconv"
+	"tibia-backend/auth"
 	"tibia-backend/repository"
 	"tibia-backend/requests"
 
@@ -27,16 +29,17 @@ func RegisterAccount(context *gin.Context) {
 		return
 	}
 
-	var account models.Account
-	account.Name = request.Name
-	account.Email = request.Email
 	if err := HashPassword(&request.Password); err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		context.Abort()
 		return
 	}
 
-	err := repository.RegisterAccount(request.Name, request.Password, request.Email)
+	account, err := repository.RegisterAccount(
+		strconv.Itoa(*request.Name),
+		request.Password,
+		request.Email,
+	)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		context.Abort()
@@ -48,5 +51,41 @@ func RegisterAccount(context *gin.Context) {
 	response.Name = account.Name
 	response.Email = account.Email
 
+	context.JSON(http.StatusCreated, response)
+}
+
+func RegisterPlayer(context *gin.Context) {
+	var request requests.RegisterPlayerRequest
+	if err := context.ShouldBindJSON(&request); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.Abort()
+		return
+	}
+	claims := auth.GetTokenClaims(context)
+	accountName, _ := strconv.Atoi(claims.Name)
+
+	player, err := repository.GetPlayer(request.Name)
+	fmt.Println(*player)
+	if err == nil {
+		context.JSON(http.StatusConflict, gin.H{"error": "player name already exists"})
+		context.Abort()
+		return
+	}
+
+	record, err := repository.RegisterPlayer(
+		request.Name,
+		accountName,
+		request.Sex,
+	)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		context.Abort()
+		return
+	}
+
+	var response requests.RegisterPlayerResponse
+	response.Id = record.Id
+	response.Name = record.Name
+	response.Sex = record.Sex
 	context.JSON(http.StatusCreated, response)
 }

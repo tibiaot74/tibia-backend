@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"tibia-backend/database"
 	"tibia-backend/models"
+	"time"
 )
 
 func RegisterAccount(
 	accountName string,
 	hashedPassword string,
 	email string,
-) error {
+) (*models.Account, error) {
 	var account models.Account
 
 	account.Name = accountName
@@ -47,9 +48,9 @@ func RegisterAccount(
 	record := database.Instance.Create(&account)
 	if record.Error != nil {
 		fmt.Println(record.Error)
-		return record.Error
+		return &account, record.Error
 	}
-	return nil
+	return &account, nil
 }
 
 func GetAccount(accountName string) (*models.Account, error) {
@@ -60,4 +61,41 @@ func GetAccount(accountName string) (*models.Account, error) {
 		return &models.Account{}, record.Error
 	}
 	return &account, nil
+}
+
+func RegisterPlayer(
+	name string,
+	account_id int,
+	sex int,
+) (*models.Player, error) {
+	var player models.Player
+
+	player.Name = name
+	player.Account_id = account_id
+	player.Conditions = ""
+	player.Sex = sex
+	player.Auction_balance = 0
+	player.Created = int(time.Now().UTC().Unix())
+	player.Nick_verify = ""
+	player.Comment = ""
+	player.Signature = ""
+	player.CastDescription = ""
+
+	record := database.Instance.Create(&player)
+	if record.Error != nil {
+		fmt.Println(record.Error)
+		return &player, record.Error
+	}
+	return &player, nil
+}
+
+func GetPlayer(playerName string) (*models.Player, error) {
+	var player models.Player
+
+	record := database.Instance.Where("name = ?", playerName).First(&player)
+	if record.Error != nil {
+		return &player, record.Error
+	}
+	fmt.Println("XDXDXDXD")
+	return &player, nil
 }
