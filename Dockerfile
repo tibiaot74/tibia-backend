@@ -7,7 +7,7 @@ COPY . ./
 RUN GOOS=linux go build -o app . 
 
 ## Deploy
-FROM alpine:latest
+FROM alpine:3.16
 WORKDIR /app
 COPY --from=build /build/app .
 RUN chmod +x ./app

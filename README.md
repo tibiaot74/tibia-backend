@@ -34,7 +34,9 @@ make local-init
 **PS**: Although you will be using port 3000 to test the API, it's actually using port 7474, but to speed up the development we are using a tool called `gin` that recompile our code everytime you save any go file and serve as a proxy.
 
 3) Are you done? Destroy everything running:
-
 ```sh
 make local-destroy
 ```
+
+## Documentation
+This API server swagger on the following path: `swagger/index.html` if you want to see the webpage or `/swagger/doc.json` if you want the openapi specification JSON.
