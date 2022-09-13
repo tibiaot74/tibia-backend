@@ -53,7 +53,7 @@ export JWT_KEY="VHfw3zAaBdPC)zHAVevFadAad2VDkX)KGnD+vLRvjH*5IvbBhUk3Fkzte5jPIG"
 
 Then, run docker compose:
 ```sh
-docker-compose -f docker-compose-local.yaml up
+docker-compose -f docker-compose-local.yaml up --build
 ```
 
 This will run the server on port 7474.
