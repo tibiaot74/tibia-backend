@@ -3,16 +3,30 @@ package main
 import (
 	"fmt"
 
-	"tibia-backend/auth"
-	"tibia-backend/controllers"
 	"tibia-backend/database"
-        "tibia-backend/helpers"
+	"tibia-backend/helpers"
+	"tibia-backend/routes"
 
-	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-
+// @title                      Tibia backend for frontend
+// @version                    1.0
+// @description                This is a backend API created using Go(lang) to serve a otserver Tibia website
+// @host                       localhost:7474
+// @BasePath                   /api
+// @accept                     json
+// @produce                    json
+// @securityDefinitions.apikey ApiKeyAuth
+// @in                         header
+// @name                       Authorization
+// @description                You can issue this token when you log in (route /api/login)
 func main() {
+	ginSwagger.WrapHandler(swaggerfiles.Handler,
+		ginSwagger.URL("http://localhost:8080/swagger/doc.json"),
+		ginSwagger.DefaultModelsExpandDepth(-1),
+	)
 	// Get Database Env Vars
 	dbUser := helpers.GetEnv("DB_USER")
 	dbPassword := helpers.GetEnv("DB_PASSWORD")
@@ -20,9 +34,8 @@ func main() {
 	dbPort := helpers.GetEnv("DB_PORT")
 	dbName := helpers.GetEnv("DB_NAME")
 	// Initialize Database
-	
 	db_connection_string := fmt.Sprintf(
-	        "%s:%s@tcp(%s:%s)/%s?parseTime=true",
+		"%s:%s@tcp(%s:%s)/%s?parseTime=true",
 		dbUser,
 		dbPassword,
 		dbHost,
@@ -31,21 +44,6 @@ func main() {
 	)
 	database.Connect(db_connection_string)
 	// Initialize Router
-	router := initRouter()
+	router := routes.InitRouter()
 	router.Run(":7474")
-}
-
-func initRouter() *gin.Engine {
-	router := gin.Default()
-	api := router.Group("/api")
-	{
-		api.POST("/token", controllers.GenerateToken)
-		api.POST("/account", controllers.RegisterAccount)
-		api.GET("/health", controllers.HealthCheck)
-		secured := api.Group("/secured").Use(auth.Auth())
-		{
-			secured.GET("/ping", controllers.Ping)
-		}
-	}
-	return router
 }

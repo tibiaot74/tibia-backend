@@ -1,7 +1,7 @@
 package requests
 
 type GenerateTokenRequest struct {
-	Email    string `json:"email"`
+	Name     int    `json:"name"`
 	Password string `json:"password"`
 }
 

@@ -1,0 +1,238 @@
+{
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a backend API created using Go(lang) to serve a otserver Tibia website",
+        "title": "Tibia backend for frontend",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:7474",
+    "basePath": "/api",
+    "paths": {
+        "/account": {
+            "post": {
+                "tags": [
+                    "Account/Login"
+                ],
+                "summary": "Create user account",
+                "parameters": [
+                    {
+                        "description": "Params to create account",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.RegisterAccountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/requests.RegisterAccountResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/player": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Account/Login"
+                ],
+                "summary": "Create player",
+                "parameters": [
+                    {
+                        "description": "Params to create player",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.RegisterPlayerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/requests.RegisterPlayerResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "tags": [
+                    "Helpers"
+                ],
+                "summary": "Check if API is healthy and responding to requests",
+                "responses": {
+                    "200": {
+                        "description": "Healthy!",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Account/Login"
+                ],
+                "summary": "Login account",
+                "parameters": [
+                    {
+                        "description": "Params to login",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.GenerateTokenRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Healthy!",
+                        "schema": {
+                            "$ref": "#/definitions/requests.GenerateTokenResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/ping": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Helpers"
+                ],
+                "summary": "Check if secured API auth is working",
+                "responses": {
+                    "200": {
+                        "description": "pong!",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "requests.GenerateTokenRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "integer"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "requests.GenerateTokenResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "requests.RegisterAccountRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "integer",
+                    "minimum": 100000
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "requests.RegisterAccountResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "requests.RegisterPlayerRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "sex"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "sex": {
+                    "type": "integer"
+                }
+            }
+        },
+        "requests.RegisterPlayerResponse": {
+            "type": "object",
+            "required": [
+                "name",
+                "sex"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "sex": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "description": "You can issue this token when you log in (route /api/login)",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
