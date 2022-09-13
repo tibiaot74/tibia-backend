@@ -98,3 +98,13 @@ func GetPlayer(playerName string) (*models.Player, error) {
 	}
 	return &player, nil
 }
+
+func GetPlayersInAccount(account_id int) ([]models.Player, error) {
+	var players []models.Player
+
+	records := database.Instance.Where("account_id = ?", account_id).Find(&players)
+	if records.Error != nil {
+		return players, records.Error
+	}
+	return players, nil
+}

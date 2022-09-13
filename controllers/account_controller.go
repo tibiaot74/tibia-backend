@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"tibia-backend/auth"
+	"tibia-backend/models"
 	"tibia-backend/repository"
 	"tibia-backend/requests"
 
@@ -12,13 +13,24 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func HashPassword(providedPassword *string) error {
+const MAX_PLAYERS_PER_ACCOUNT = 16
+
+func hashPassword(providedPassword *string) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(*providedPassword), 14)
 	*providedPassword = string(hashedPassword)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func hasPlayerWithName(players []models.Player, name *string) bool {
+	for _, player := range players {
+		if player.Name == *name {
+			return true
+		}
+	}
+	return false
 }
 
 // @tags    Account/Login
@@ -34,7 +46,7 @@ func RegisterAccount(context *gin.Context) {
 		return
 	}
 
-	if err := HashPassword(&request.Password); err != nil {
+	if err := hashPassword(&request.Password); err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		context.Abort()
 		return
@@ -75,9 +87,20 @@ func RegisterPlayer(context *gin.Context) {
 	claims := auth.GetTokenClaims(context)
 	accountName, _ := strconv.Atoi(claims.Name)
 
-	player, err := repository.GetPlayer(request.Name)
-	fmt.Println(*player)
-	if err == nil {
+	fmt.Print(claims.ID)
+
+	players, err := repository.GetPlayersInAccount(accountName)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "error fetching players from database"})
+		context.Abort()
+		return
+	}
+	if len(players) > MAX_PLAYERS_PER_ACCOUNT {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "can't have over " + strconv.Itoa(MAX_PLAYERS_PER_ACCOUNT) + " player characters in account"})
+		context.Abort()
+		return
+	}
+	if hasPlayerWithName(players, &request.Name) {
 		context.JSON(http.StatusConflict, gin.H{"error": "player name already exists"})
 		context.Abort()
 		return
