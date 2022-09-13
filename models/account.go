@@ -34,6 +34,13 @@ type Account struct {
 	Vote             int
 }
 
+type Sex int
+
+const (
+	Female Sex = 0
+	Male   Sex = 1
+)
+
 type Player struct {
 	Id                    int `gorm:"primarykey"`
 	Name                  string
@@ -63,7 +70,7 @@ type Player struct {
 	Posz                  int
 	Conditions            string
 	Cap                   int
-	Sex                   int
+	Sex                   Sex
 	Lastlogin             int
 	Lastip                int
 	Save                  int

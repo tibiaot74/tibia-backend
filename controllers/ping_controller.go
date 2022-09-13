@@ -10,7 +10,7 @@ import (
 // @summary  Check if secured API auth is working
 // @Security ApiKeyAuth
 // @success  200 {string} string "pong!"
-// @router   /secured/ping [get]
+// @router   /ping [get]
 func Ping(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"message": "pong"})
 }

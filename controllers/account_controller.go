@@ -64,7 +64,7 @@ func RegisterAccount(context *gin.Context) {
 // @Security ApiKeyAuth
 // @param    request body     requests.RegisterPlayerRequest true "Params to create player"
 // @success  200     {object} requests.RegisterPlayerResponse
-// @router   /secured/player [post]
+// @router   /account/player [post]
 func RegisterPlayer(context *gin.Context) {
 	var request requests.RegisterPlayerRequest
 	if err := context.ShouldBindJSON(&request); err != nil {

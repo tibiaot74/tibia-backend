@@ -23,11 +23,11 @@ func InitRouter() *gin.Engine {
 		api.POST("/login", controllers.GenerateToken)
 		api.POST("/account", controllers.RegisterAccount)
 		api.GET("/health", controllers.HealthCheck)
-		secured := api.Group("/secured").Use(auth.Auth())
+		account_secured := api.Group("/account").Use(auth.Auth())
 		{
-			secured.GET("/ping", controllers.Ping)
-			secured.POST("/player", controllers.RegisterPlayer)
+			account_secured.POST("/player", controllers.RegisterPlayer)
 		}
+		api.GET("/ping", controllers.Ping).Use(auth.Auth())
 	}
 	return router
 }

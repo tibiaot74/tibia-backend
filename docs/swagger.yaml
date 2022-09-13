@@ -84,6 +84,25 @@ paths:
       summary: Create user account
       tags:
       - Account/Login
+  /account/player:
+    post:
+      parameters:
+      - description: Params to create player
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/requests.RegisterPlayerRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/requests.RegisterPlayerResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create player
+      tags:
+      - Account/Login
   /health:
     get:
       responses:
@@ -111,7 +130,7 @@ paths:
       summary: Login account
       tags:
       - Account/Login
-  /secured/ping:
+  /ping:
     get:
       responses:
         "200":
@@ -123,25 +142,6 @@ paths:
       summary: Check if secured API auth is working
       tags:
       - Helpers
-  /secured/player:
-    post:
-      parameters:
-      - description: Params to create player
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/requests.RegisterPlayerRequest'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/requests.RegisterPlayerResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Create player
-      tags:
-      - Account/Login
 produces:
 - application/json
 securityDefinitions:

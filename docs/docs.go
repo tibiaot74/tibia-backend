@@ -49,6 +49,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/account/player": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Account/Login"
+                ],
+                "summary": "Create player",
+                "parameters": [
+                    {
+                        "description": "Params to create player",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.RegisterPlayerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/requests.RegisterPlayerResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/health": {
             "get": {
                 "tags": [
@@ -92,7 +124,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/secured/ping": {
+        "/ping": {
             "get": {
                 "security": [
                     {
@@ -108,38 +140,6 @@ const docTemplate = `{
                         "description": "pong!",
                         "schema": {
                             "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/secured/player": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "Account/Login"
-                ],
-                "summary": "Create player",
-                "parameters": [
-                    {
-                        "description": "Params to create player",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/requests.RegisterPlayerRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/requests.RegisterPlayerResponse"
                         }
                     }
                 }

@@ -66,7 +66,7 @@ func GetAccount(accountName string) (*models.Account, error) {
 func RegisterPlayer(
 	name string,
 	account_id int,
-	sex int,
+	sex models.Sex,
 ) (*models.Player, error) {
 	var player models.Player
 
@@ -96,6 +96,5 @@ func GetPlayer(playerName string) (*models.Player, error) {
 	if record.Error != nil {
 		return &player, record.Error
 	}
-	fmt.Println("XDXDXDXD")
 	return &player, nil
 }
