@@ -38,5 +38,11 @@ make local-init
 make local-destroy
 ```
 
+## Running locally (frontend)
+If you are part of the frontend and wants to run this project locally you can simply run:
+```sh
+docker-compose -f docker-compose-local.yaml up
+```
+
 ## Documentation
 This API server swagger on the following path: `swagger/index.html` if you want to see the webpage or `/swagger/doc.json` if you want the openapi specification JSON.
