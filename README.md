@@ -56,5 +56,12 @@ Then, run docker compose:
 docker-compose -f docker-compose-local.yaml up
 ```
 
+This will run the server on port 7474.
+
+To shut down all the infrastructure just run:
+```sh
+docker-compose -f docker-compose-local.yaml down
+```
+
 ## Documentation
 This API server swagger on the following path: `swagger/index.html` if you want to see the webpage or `/swagger/doc.json` if you want the openapi specification JSON.
