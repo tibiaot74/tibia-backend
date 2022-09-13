@@ -40,6 +40,18 @@ make local-destroy
 
 ## Running locally (frontend)
 If you are part of the frontend and wants to run this project locally you can simply run:
+
+First set the environment variables:
+```sh
+export DB_NAME=ot
+export DB_HOST=127.0.0.1
+export DB_PORT=3306
+export DB_USER=tibia
+export DB_PASSWORD=123123
+export JWT_KEY="VHfw^**aBdPC)!zHAVev!%#dA@d@VDkX)KGnD+v!RvjH*5IvbBhUk3%kzte5jPIG"
+```
+
+Then, run docker compose:
 ```sh
 docker-compose -f docker-compose-local.yaml up
 ```
