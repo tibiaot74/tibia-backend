@@ -23,7 +23,7 @@ export DB_HOST=127.0.0.1
 export DB_PORT=3306
 export DB_USER=tibia
 export DB_PASSWORD=123123
-export JWT_KEY="VHfw^**aBdPC)!zHAVev!%#dA@d@VDkX)KGnD+v!RvjH*5IvbBhUk3%kzte5jPIG"
+export JWT_KEY="VHfw3zAaBdPC)zHAVevFadAad2VDkX)KGnD+vLRvjH*5IvbBhUk3Fkzte5jPIG"
 ```
 
 2) Create the database and run the the API locally on port `3000`
@@ -48,7 +48,7 @@ export DB_HOST=127.0.0.1
 export DB_PORT=3306
 export DB_USER=tibia
 export DB_PASSWORD=123123
-export JWT_KEY="VHfw^**aBdPC)!zHAVev!%#dA@d@VDkX)KGnD+v!RvjH*5IvbBhUk3%kzte5jPIG"
+export JWT_KEY="VHfw3zAaBdPC)zHAVevFadAad2VDkX)KGnD+vLRvjH*5IvbBhUk3Fkzte5jPIG"
 ```
 
 Then, run docker compose:
