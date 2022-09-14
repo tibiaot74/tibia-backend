@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"tibia-backend/auth"
@@ -73,10 +72,9 @@ func RegisterPlayer(context *gin.Context) {
 		return
 	}
 	claims := auth.GetTokenClaims(context)
-	accountName, _ := strconv.Atoi(claims.Name)
+	accountId := claims.Id
 
-	player, err := repository.GetPlayer(request.Name)
-	fmt.Println(*player)
+	_, err := repository.GetPlayer(request.Name)
 	if err == nil {
 		context.JSON(http.StatusConflict, gin.H{"error": "player name already exists"})
 		context.Abort()
@@ -85,9 +83,11 @@ func RegisterPlayer(context *gin.Context) {
 
 	record, err := repository.RegisterPlayer(
 		request.Name,
-		accountName,
-		request.Sex,
+		accountId,
+		*request.Sex,
+		request.Outfit,
 	)
+
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		context.Abort()
@@ -98,5 +98,6 @@ func RegisterPlayer(context *gin.Context) {
 	response.Id = record.Id
 	response.Name = record.Name
 	response.Sex = record.Sex
+	response.Outfit = record.Lookbody
 	context.JSON(http.StatusCreated, response)
 }
