@@ -34,11 +34,11 @@ type Account struct {
 	Vote             int
 }
 
-type Sex int
+type Sex bool
 
 const (
-	Female Sex = 0
-	Male   Sex = 1
+	Female Sex = true
+	Male   Sex = false
 )
 
 type Player struct {

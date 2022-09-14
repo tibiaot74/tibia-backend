@@ -12,14 +12,16 @@ import (
 var jwtKey = []byte(helpers.GetEnv("JWT_KEY"))
 
 type JWTClaim struct {
+	Id    int    `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(email string, name string) (tokenString string, err error) {
+func GenerateJWT(id int, email string, name string) (tokenString string, err error) {
 	var expirationTimeInHour time.Duration = 1
 	claims := &JWTClaim{
+		Id:    id,
 		Email: email,
 		Name:  name,
 		RegisteredClaims: jwt.RegisteredClaims{
