@@ -37,8 +37,8 @@ type Account struct {
 type Sex bool
 
 const (
-	Female Sex = true
-	Male   Sex = false
+	Female Sex = false
+	Male   Sex = true
 )
 
 type Player struct {
