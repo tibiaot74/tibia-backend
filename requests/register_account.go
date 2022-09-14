@@ -15,12 +15,14 @@ type RegisterAccountResponse struct {
 }
 
 type RegisterPlayerRequest struct {
-	Name string      `json:"name" binding:"required"`
-	Sex  *models.Sex `json:"sex" binding:"required"`
+	Name   string      `json:"name" binding:"required"`
+	Sex    *models.Sex `json:"sex" binding:"required"`
+	Outfit int         `json:"outfit" binding:"required"`
 }
 
 type RegisterPlayerResponse struct {
-	Id   int        `json:"id"`
-	Name string     `json:"name" binding:"required"`
-	Sex  models.Sex `json:"sex" binding:"required"`
+	Id     int        `json:"id"`
+	Name   string     `json:"name" binding:"required"`
+	Sex    models.Sex `json:"sex" binding:"required"`
+	Outfit int        `json:"outfit" binding:"required"`
 }

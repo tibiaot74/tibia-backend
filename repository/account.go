@@ -67,6 +67,7 @@ func RegisterPlayer(
 	name string,
 	account_id int,
 	sex models.Sex,
+	outfit int,
 ) (*models.Player, error) {
 	var player models.Player
 
@@ -74,6 +75,7 @@ func RegisterPlayer(
 	player.Account_id = account_id
 	player.Conditions = ""
 	player.Sex = sex
+	player.Lookbody = outfit
 	player.Auction_balance = 0
 	player.Created = int(time.Now().UTC().Unix())
 	player.Nick_verify = ""

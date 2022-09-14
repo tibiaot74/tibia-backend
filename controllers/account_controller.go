@@ -85,6 +85,7 @@ func RegisterPlayer(context *gin.Context) {
 		request.Name,
 		accountId,
 		*request.Sex,
+		request.Outfit,
 	)
 
 	if err != nil {
@@ -97,5 +98,6 @@ func RegisterPlayer(context *gin.Context) {
 	response.Id = record.Id
 	response.Name = record.Name
 	response.Sex = record.Sex
+	response.Outfit = record.Lookbody
 	context.JSON(http.StatusCreated, response)
 }
