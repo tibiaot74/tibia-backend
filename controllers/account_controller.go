@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"tibia-backend/auth"
@@ -72,10 +71,8 @@ func RegisterPlayer(context *gin.Context) {
 		context.Abort()
 		return
 	}
-	fmt.Println("1")
 	claims := auth.GetTokenClaims(context)
 	accountId := claims.Id
-	fmt.Println("2")
 
 	_, err := repository.GetPlayer(request.Name)
 	if err == nil {
@@ -83,21 +80,18 @@ func RegisterPlayer(context *gin.Context) {
 		context.Abort()
 		return
 	}
-	fmt.Println("3")
 
 	record, err := repository.RegisterPlayer(
 		request.Name,
 		accountId,
 		*request.Sex,
 	)
-	fmt.Println("4")
 
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		context.Abort()
 		return
 	}
-	fmt.Println("5")
 
 	var response requests.RegisterPlayerResponse
 	response.Id = record.Id

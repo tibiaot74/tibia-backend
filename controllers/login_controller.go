@@ -14,8 +14,6 @@ import (
 
 func CheckPassword(InputPassword *string, storedPassword *string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(*storedPassword), []byte(*InputPassword))
-	fmt.Println(*InputPassword)
-	fmt.Println(*storedPassword)
 
 	if err != nil {
 		fmt.Println(err)
