@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"tibia-backend/auth"
@@ -87,7 +86,7 @@ func RegisterPlayer(context *gin.Context) {
 		request.Name,
 		accountId,
 		*request.Sex,
-		request.Outfit,
+		mappers.StringToOutfit(request.Outfit),
 	)
 
 	if err != nil {
@@ -100,7 +99,7 @@ func RegisterPlayer(context *gin.Context) {
 	response.Id = player.Id
 	response.Name = player.Name
 	response.Sex = mappers.IntToSex(player.Sex)
-	response.Outfit = player.Lookbody
+	response.Outfit = mappers.OutfitToString(player.Lookbody)
 	context.JSON(http.StatusCreated, response)
 }
 
@@ -112,25 +111,31 @@ func RegisterPlayer(context *gin.Context) {
 func ListPlayers(context *gin.Context) {
 	claims := auth.GetTokenClaims(context)
 	accountId := claims.Id
+	var response requests.ListPlayersResponse
 
 	players, err := repository.ListPlayers(accountId)
-	fmt.Println(players)
+
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		context.Abort()
 		return
 	}
-	fmt.Println(len(*players))
+	if len(*players) == 0 {
+		response.Players = []requests.ListPlayerInfo{}
+		context.JSON(http.StatusOK, response)
+		return
+	}
+
 	var playersInfo []requests.ListPlayerInfo
 	for i := 0; i < len(*players); i++ {
 		playersInfo = append(playersInfo, requests.ListPlayerInfo{
 			Name:   (*players)[i].Name,
 			Level:  (*players)[i].Level,
 			Sex:    mappers.IntToSex((*players)[i].Sex),
-			Outfit: (*players)[i].Lookbody,
+			Outfit: mappers.OutfitToString((*players)[i].Lookbody),
 		})
 	}
-	var response requests.ListPlayersResponse
+
 	response.Players = playersInfo
 	context.JSON(http.StatusOK, response)
 }

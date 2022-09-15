@@ -17,21 +17,21 @@ type RegisterAccountResponse struct {
 type RegisterPlayerRequest struct {
 	Name   string      `json:"name" binding:"required"`
 	Sex    *models.Sex `json:"sex" binding:"required"`
-	Outfit int         `json:"outfit" binding:"required"`
+	Outfit string      `json:"outfit" binding:"required"`
 }
 
 type RegisterPlayerResponse struct {
 	Id     int        `json:"id"`
 	Name   string     `json:"name" binding:"required"`
 	Sex    models.Sex `json:"sex" binding:"required"`
-	Outfit int        `json:"outfit" binding:"required"`
+	Outfit string     `json:"outfit" binding:"required"`
 }
 
 type ListPlayerInfo struct {
 	Name   string     `json:"name"`
 	Level  int        `json:"level"`
 	Sex    models.Sex `json:"sex"`
-	Outfit int        `json:"outfit"`
+	Outfit string     `json:"outfit"`
 }
 
 type ListPlayersResponse struct {
