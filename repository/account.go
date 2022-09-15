@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 	"tibia-backend/database"
+	"tibia-backend/mappers"
 	"tibia-backend/models"
 	"time"
 )
@@ -74,7 +75,7 @@ func RegisterPlayer(
 	player.Name = name
 	player.Account_id = account_id
 	player.Conditions = ""
-	player.Sex = sex
+	player.Sex = mappers.SexToInt(sex)
 	player.Lookbody = outfit
 	player.Auction_balance = 0
 	player.Created = int(time.Now().UTC().Unix())
@@ -99,4 +100,15 @@ func GetPlayer(playerName string) (*models.Player, error) {
 		return &player, record.Error
 	}
 	return &player, nil
+}
+
+func ListPlayers(accountName int) (*[]models.Player, error) {
+	var players []models.Player
+
+	record := database.Instance.Where("account_id = ?", accountName).Find(&players)
+	if record.Error != nil {
+		fmt.Println(record.Error)
+		return &players, record.Error
+	}
+	return &players, nil
 }

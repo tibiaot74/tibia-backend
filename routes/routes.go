@@ -26,6 +26,7 @@ func InitRouter() *gin.Engine {
 		account_secured := api.Group("/account").Use(auth.Auth())
 		{
 			account_secured.POST("/player", controllers.RegisterPlayer)
+			account_secured.GET("/player", controllers.ListPlayers)
 		}
 		api.GET("/ping", controllers.Ping).Use(auth.Auth())
 	}

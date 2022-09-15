@@ -70,7 +70,7 @@ type Player struct {
 	Posz                  int
 	Conditions            string
 	Cap                   int
-	Sex                   Sex
+	Sex                   int
 	Lastlogin             int
 	Lastip                int
 	Save                  int
