@@ -26,3 +26,14 @@ type RegisterPlayerResponse struct {
 	Sex    models.Sex `json:"sex" binding:"required"`
 	Outfit int        `json:"outfit" binding:"required"`
 }
+
+type ListPlayerInfo struct {
+	Name   string     `json:"name"`
+	Level  int        `json:"level"`
+	Sex    models.Sex `json:"sex"`
+	Outfit int        `json:"outfit"`
+}
+
+type ListPlayersResponse struct {
+	Players []ListPlayerInfo `json:"players"`
+}

@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"tibia-backend/auth"
+	"tibia-backend/mappers"
 	"tibia-backend/repository"
 	"tibia-backend/requests"
 
@@ -81,7 +83,7 @@ func RegisterPlayer(context *gin.Context) {
 		return
 	}
 
-	record, err := repository.RegisterPlayer(
+	player, err := repository.RegisterPlayer(
 		request.Name,
 		accountId,
 		*request.Sex,
@@ -95,9 +97,40 @@ func RegisterPlayer(context *gin.Context) {
 	}
 
 	var response requests.RegisterPlayerResponse
-	response.Id = record.Id
-	response.Name = record.Name
-	response.Sex = record.Sex
-	response.Outfit = record.Lookbody
+	response.Id = player.Id
+	response.Name = player.Name
+	response.Sex = mappers.IntToSex(player.Sex)
+	response.Outfit = player.Lookbody
 	context.JSON(http.StatusCreated, response)
+}
+
+// @tags     Account/Login
+// @summary  Get all players of a specific account
+// @Security ApiKeyAuth
+// @success  200     {object} requests.ListPlayersResponse
+// @router   /account/player [get]
+func ListPlayers(context *gin.Context) {
+	claims := auth.GetTokenClaims(context)
+	accountId := claims.Id
+
+	players, err := repository.ListPlayers(accountId)
+	fmt.Println(players)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		context.Abort()
+		return
+	}
+	fmt.Println(len(*players))
+	var playersInfo []requests.ListPlayerInfo
+	for i := 0; i < len(*players); i++ {
+		playersInfo = append(playersInfo, requests.ListPlayerInfo{
+			Name:   (*players)[i].Name,
+			Level:  (*players)[i].Level,
+			Sex:    mappers.IntToSex((*players)[i].Sex),
+			Outfit: (*players)[i].Lookbody,
+		})
+	}
+	var response requests.ListPlayersResponse
+	response.Players = playersInfo
+	context.JSON(http.StatusOK, response)
 }
