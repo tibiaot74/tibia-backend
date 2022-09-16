@@ -54,11 +54,11 @@ var OutfitMap = map[string]OutfitInfo{
 		Id:        137,
 		IsPremium: false,
 	},
-	"citizen_male": {
+	"citzen_male": {
 		Id:        128,
 		IsPremium: false,
 	},
-	"citizen_female": {
+	"citzen_female": {
 		Id:        136,
 		IsPremium: false,
 	},

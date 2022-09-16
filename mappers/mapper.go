@@ -44,6 +44,10 @@ func OutfitToString(outfit int) string {
 
 func StringToOutfit(outfit string, sex int) int {
 	sexAsString := SexToString(sex)
-	outfit_sex_concat := fmt.Sprintf("%s_%s", outfit, sexAsString)
-	return OutfitMap[outfit_sex_concat].Id
+	outfit_sex_concat := fmt.Sprintf("%s_%s", strings.ToLower(outfit), sexAsString)
+	outfitAsInt := OutfitMap[outfit_sex_concat].Id
+	if outfitAsInt == 0 {
+		return OutfitMap["citzen_male"].Id
+	}
+	return outfitAsInt
 }

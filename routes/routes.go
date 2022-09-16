@@ -14,7 +14,12 @@ import (
 
 func InitRouter() *gin.Engine {
 	router := gin.Default()
-	router.Use(cors.Default())
+
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowHeaders = []string{"Authorization", "content-type"}
+
+	router.Use(cors.New(config))
 	api := router.Group("/api")
 
 	docs.SwaggerInfo.BasePath = "/api"
