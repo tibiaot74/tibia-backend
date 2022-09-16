@@ -58,10 +58,7 @@ func GetAccount(accountName string) (*models.Account, error) {
 	var account models.Account
 
 	record := database.Instance.Where("name = ?", accountName).First(&account)
-	if record.Error != nil {
-		return &models.Account{}, record.Error
-	}
-	return &account, nil
+	return &account, record.Error
 }
 
 func RegisterPlayer(
@@ -96,19 +93,12 @@ func GetPlayer(playerName string) (*models.Player, error) {
 	var player models.Player
 
 	record := database.Instance.Where("name = ?", playerName).First(&player)
-	if record.Error != nil {
-		return &player, record.Error
-	}
-	return &player, nil
+	return &player, record.Error
 }
 
-func ListPlayers(accountName int) (*[]models.Player, error) {
+func GetPlayersInAccount(accountId int) ([]models.Player, error) {
 	var players []models.Player
 
-	record := database.Instance.Where("account_id = ?", accountName).Find(&players)
-	if record.Error != nil {
-		fmt.Println(record.Error)
-		return &players, record.Error
-	}
-	return &players, nil
+	records := database.Instance.Where("account_id = ?", accountId).Find(&players)
+	return players, records.Error
 }

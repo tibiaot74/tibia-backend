@@ -3,22 +3,35 @@ package controllers
 import (
 	"net/http"
 	"strconv"
-	"tibia-backend/auth"
-	"tibia-backend/mappers"
-	"tibia-backend/repository"
-	"tibia-backend/requests"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+
+	"tibia-backend/auth"
+	"tibia-backend/mappers"
+	"tibia-backend/models"
+	"tibia-backend/repository"
+	"tibia-backend/requests"
 )
 
-func HashPassword(providedPassword *string) error {
+const MAX_PLAYERS_PER_ACCOUNT = 16
+
+func hashPassword(providedPassword *string) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(*providedPassword), 14)
 	*providedPassword = string(hashedPassword)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func hasPlayerWithName(players []models.Player, name *string) bool {
+	for _, player := range players {
+		if player.Name == *name {
+			return true
+		}
+	}
+	return false
 }
 
 // @tags    Account/Login
@@ -34,7 +47,7 @@ func RegisterAccount(context *gin.Context) {
 		return
 	}
 
-	if err := HashPassword(&request.Password); err != nil {
+	if err := hashPassword(&request.Password); err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		context.Abort()
 		return
@@ -75,8 +88,18 @@ func RegisterPlayer(context *gin.Context) {
 	claims := auth.GetTokenClaims(context)
 	accountId := claims.Id
 
-	_, err := repository.GetPlayer(request.Name)
-	if err == nil {
+	players, err := repository.GetPlayersInAccount(accountId)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "error fetching players from database"})
+		context.Abort()
+		return
+	}
+	if len(players) >= MAX_PLAYERS_PER_ACCOUNT {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "can't have over " + strconv.Itoa(MAX_PLAYERS_PER_ACCOUNT) + " player characters in account"})
+		context.Abort()
+		return
+	}
+	if hasPlayerWithName(players, &request.Name) {
 		context.JSON(http.StatusConflict, gin.H{"error": "player name already exists"})
 		context.Abort()
 		return
@@ -112,24 +135,24 @@ func ListPlayers(context *gin.Context) {
 	claims := auth.GetTokenClaims(context)
 	accountId := claims.Id
 	var response requests.ListPlayersResponse
-	players, err := repository.ListPlayers(accountId)
+	players, err := repository.GetPlayersInAccount(accountId)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		context.Abort()
 		return
 	}
-	if len(*players) == 0 {
+	if len(players) == 0 {
 		response.Players = []requests.ListPlayerInfo{}
 		context.JSON(http.StatusOK, response)
 		return
 	}
 	var playersInfo []requests.ListPlayerInfo
-	for i := 0; i < len(*players); i++ {
+	for i := 0; i < len(players); i++ {
 		playersInfo = append(playersInfo, requests.ListPlayerInfo{
-			Name:   (*players)[i].Name,
-			Level:  (*players)[i].Level,
-			Sex:    mappers.IntToSex((*players)[i].Sex),
-			Outfit: mappers.OutfitToString((*players)[i].Looktype),
+			Name:   players[i].Name,
+			Level:  players[i].Level,
+			Sex:    mappers.IntToSex(players[i].Sex),
+			Outfit: mappers.OutfitToString(players[i].Looktype),
 		})
 	}
 
