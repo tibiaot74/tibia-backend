@@ -76,7 +76,7 @@ func RegisterPlayer(
 	player.Account_id = account_id
 	player.Conditions = ""
 	player.Sex = mappers.SexToInt(sex)
-	player.Lookbody = outfit
+	player.Looktype = outfit
 	player.Auction_balance = 0
 	player.Created = int(time.Now().UTC().Unix())
 	player.Nick_verify = ""
