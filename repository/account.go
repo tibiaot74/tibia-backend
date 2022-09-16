@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 	"tibia-backend/database"
+	"tibia-backend/mappers"
 	"tibia-backend/models"
 	"time"
 )
@@ -57,23 +58,22 @@ func GetAccount(accountName string) (*models.Account, error) {
 	var account models.Account
 
 	record := database.Instance.Where("name = ?", accountName).First(&account)
-	if record.Error != nil {
-		return &models.Account{}, record.Error
-	}
-	return &account, nil
+	return &account, record.Error
 }
 
 func RegisterPlayer(
 	name string,
 	account_id int,
 	sex models.Sex,
+	outfit int,
 ) (*models.Player, error) {
 	var player models.Player
 
 	player.Name = name
 	player.Account_id = account_id
 	player.Conditions = ""
-	player.Sex = sex
+	player.Sex = mappers.SexToInt(sex)
+	player.Looktype = outfit
 	player.Auction_balance = 0
 	player.Created = int(time.Now().UTC().Unix())
 	player.Nick_verify = ""
@@ -93,18 +93,12 @@ func GetPlayer(playerName string) (*models.Player, error) {
 	var player models.Player
 
 	record := database.Instance.Where("name = ?", playerName).First(&player)
-	if record.Error != nil {
-		return &player, record.Error
-	}
-	return &player, nil
+	return &player, record.Error
 }
 
-func GetPlayersInAccount(account_id int) ([]models.Player, error) {
+func GetPlayersInAccount(accountId int) ([]models.Player, error) {
 	var players []models.Player
 
-	records := database.Instance.Where("account_id = ?", account_id).Find(&players)
-	if records.Error != nil {
-		return players, records.Error
-	}
-	return players, nil
+	records := database.Instance.Where("account_id = ?", accountId).Find(&players)
+	return players, records.Error
 }

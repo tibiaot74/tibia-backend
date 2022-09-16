@@ -14,7 +14,12 @@ import (
 
 func InitRouter() *gin.Engine {
 	router := gin.Default()
-	router.Use(cors.Default())
+
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowHeaders = []string{"Authorization", "content-type"}
+
+	router.Use(cors.New(config))
 	api := router.Group("/api")
 
 	docs.SwaggerInfo.BasePath = "/api"
@@ -26,6 +31,7 @@ func InitRouter() *gin.Engine {
 		account_secured := api.Group("/account").Use(auth.Auth())
 		{
 			account_secured.POST("/player", controllers.RegisterPlayer)
+			account_secured.GET("/player", controllers.ListPlayers)
 		}
 		api.GET("/ping", controllers.Ping).Use(auth.Auth())
 	}

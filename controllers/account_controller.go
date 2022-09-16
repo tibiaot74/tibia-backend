@@ -1,16 +1,17 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
-	"tibia-backend/auth"
-	"tibia-backend/models"
-	"tibia-backend/repository"
-	"tibia-backend/requests"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+
+	"tibia-backend/auth"
+	"tibia-backend/mappers"
+	"tibia-backend/models"
+	"tibia-backend/repository"
+	"tibia-backend/requests"
 )
 
 const MAX_PLAYERS_PER_ACCOUNT = 16
@@ -85,11 +86,9 @@ func RegisterPlayer(context *gin.Context) {
 		return
 	}
 	claims := auth.GetTokenClaims(context)
-	accountName, _ := strconv.Atoi(claims.Name)
+	accountId := claims.Id
 
-	fmt.Print(claims.ID)
-
-	players, err := repository.GetPlayersInAccount(accountName)
+	players, err := repository.GetPlayersInAccount(accountId)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": "error fetching players from database"})
 		context.Abort()
@@ -106,11 +105,13 @@ func RegisterPlayer(context *gin.Context) {
 		return
 	}
 
-	record, err := repository.RegisterPlayer(
+	player, err := repository.RegisterPlayer(
 		request.Name,
-		accountName,
-		request.Sex,
+		accountId,
+		*request.Sex,
+		mappers.StringToOutfit(request.Outfit, mappers.SexToInt(*request.Sex)),
 	)
+
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		context.Abort()
@@ -118,8 +119,43 @@ func RegisterPlayer(context *gin.Context) {
 	}
 
 	var response requests.RegisterPlayerResponse
-	response.Id = record.Id
-	response.Name = record.Name
-	response.Sex = record.Sex
+	response.Id = player.Id
+	response.Name = player.Name
+	response.Sex = mappers.IntToSex(player.Sex)
+	response.Outfit = mappers.OutfitToString(player.Looktype)
 	context.JSON(http.StatusCreated, response)
+}
+
+// @tags     Account/Login
+// @summary  Get all players of a specific account
+// @Security ApiKeyAuth
+// @success  200     {object} requests.ListPlayersResponse
+// @router   /account/player [get]
+func ListPlayers(context *gin.Context) {
+	claims := auth.GetTokenClaims(context)
+	accountId := claims.Id
+	var response requests.ListPlayersResponse
+	players, err := repository.GetPlayersInAccount(accountId)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		context.Abort()
+		return
+	}
+	if len(players) == 0 {
+		response.Players = []requests.ListPlayerInfo{}
+		context.JSON(http.StatusOK, response)
+		return
+	}
+	var playersInfo []requests.ListPlayerInfo
+	for i := 0; i < len(players); i++ {
+		playersInfo = append(playersInfo, requests.ListPlayerInfo{
+			Name:   players[i].Name,
+			Level:  players[i].Level,
+			Sex:    mappers.IntToSex(players[i].Sex),
+			Outfit: mappers.OutfitToString(players[i].Looktype),
+		})
+	}
+
+	response.Players = playersInfo
+	context.JSON(http.StatusOK, response)
 }

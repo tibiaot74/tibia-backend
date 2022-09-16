@@ -14,8 +14,6 @@ import (
 
 func CheckPassword(InputPassword *string, storedPassword *string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(*storedPassword), []byte(*InputPassword))
-	fmt.Println(*InputPassword)
-	fmt.Println(*storedPassword)
 
 	if err != nil {
 		fmt.Println(err)
@@ -50,7 +48,7 @@ func GenerateToken(context *gin.Context) {
 		return
 	}
 
-	tokenString, err := auth.GenerateJWT(account.Name, account.Name)
+	tokenString, err := auth.GenerateJWT(account.Id, account.Name, account.Email)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		context.Abort()
