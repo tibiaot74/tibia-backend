@@ -94,7 +94,7 @@ func RegisterPlayer(context *gin.Context) {
 		context.Abort()
 		return
 	}
-	if len(players) > MAX_PLAYERS_PER_ACCOUNT {
+	if len(players) >= MAX_PLAYERS_PER_ACCOUNT {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": "can't have over " + strconv.Itoa(MAX_PLAYERS_PER_ACCOUNT) + " player characters in account"})
 		context.Abort()
 		return
