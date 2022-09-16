@@ -86,7 +86,7 @@ func RegisterPlayer(context *gin.Context) {
 		request.Name,
 		accountId,
 		*request.Sex,
-		mappers.StringToOutfit(request.Outfit),
+		mappers.StringToOutfit(request.Outfit, mappers.SexToInt(*request.Sex)),
 	)
 
 	if err != nil {
@@ -99,7 +99,7 @@ func RegisterPlayer(context *gin.Context) {
 	response.Id = player.Id
 	response.Name = player.Name
 	response.Sex = mappers.IntToSex(player.Sex)
-	response.Outfit = mappers.OutfitToString(player.Lookbody)
+	response.Outfit = mappers.OutfitToString(player.Looktype)
 	context.JSON(http.StatusCreated, response)
 }
 
@@ -112,9 +112,7 @@ func ListPlayers(context *gin.Context) {
 	claims := auth.GetTokenClaims(context)
 	accountId := claims.Id
 	var response requests.ListPlayersResponse
-
 	players, err := repository.ListPlayers(accountId)
-
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		context.Abort()
@@ -125,14 +123,13 @@ func ListPlayers(context *gin.Context) {
 		context.JSON(http.StatusOK, response)
 		return
 	}
-
 	var playersInfo []requests.ListPlayerInfo
 	for i := 0; i < len(*players); i++ {
 		playersInfo = append(playersInfo, requests.ListPlayerInfo{
 			Name:   (*players)[i].Name,
 			Level:  (*players)[i].Level,
 			Sex:    mappers.IntToSex((*players)[i].Sex),
-			Outfit: mappers.OutfitToString((*players)[i].Lookbody),
+			Outfit: mappers.OutfitToString((*players)[i].Looktype),
 		})
 	}
 
