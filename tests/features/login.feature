@@ -21,3 +21,14 @@ Feature: Login
         Given An account with name "744774", email "jaspion@bol.com.br" and password "Senha123" exists
         When Client tries to login with name "744774" and password "Senha"
         Then Login fails for wrong credentials
+
+    Scenario: Access secured endpoint when logged in
+        Given An account with name "744774", email "jaspion@bol.com.br" and password "Senha123" exists
+        And Client is logged into account of name "744774" with password "Senha123"
+        When Client tries to access a secured functionality
+        Then Secured functionality is accessible
+
+    Scenario: Access secured endpoint when not logged in
+        Given Client is not logged in
+        When Client tries to access a secured functionality
+        Then Secured functionality is not accessible
