@@ -8,6 +8,6 @@ def step_impl(context):
     context.response = requests.get(f"{context.url}/health")
 
 
-@then("Application responds Successfully")
+@then("Application responds successfully")
 def step_impl(context):
     assert_that(context.response.status_code, equal_to(200))
