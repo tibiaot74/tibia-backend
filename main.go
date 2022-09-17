@@ -45,5 +45,8 @@ func main() {
 	database.Connect(DbConnetionString)
 	// Initialize Router
 	router := routes.InitRouter()
-	router.Run(":7474")
+	err := router.Run(":7474")
+	if err != nil {
+		fmt.Println("Could not start API.")
+	}
 }
