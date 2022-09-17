@@ -2,4 +2,5 @@ bcrypt
 behave
 mysql-connector-python
 PyHamcrest
+pyjwt
 requests
