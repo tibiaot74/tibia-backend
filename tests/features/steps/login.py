@@ -1,7 +1,9 @@
-import requests
-from behave import given, when, then
-from hamcrest import *
+import os
+
 import jwt
+import requests
+from behave import given, then, when
+from hamcrest import *
 
 
 @given("Client is not logged in")
@@ -12,16 +14,18 @@ def step_impl(context):
 @given('Client is logged into account of name "{name}" with password "{password}"')
 def step_impl(context, name, password):
     context.session = requests.Session()
-    response = context.session.post(f"{context.url}/login", json={"name": int(name), "password": password})
+    response = context.session.post(
+        f"{context.url}/login", json={"name": int(name), "password": password})
     context.session.headers = {"Authorization": response.json()["token"]}
     context.raw_jwt = response.json()["token"]
-    context.jwt = jwt.decode(response.json()["token"], "JWT_TOKEN", algorithms=["HS256"])
+    context.jwt = jwt.decode(response.json()["token"], os.getenv("JWT_KEY"), algorithms=["HS256"])
 
 
 @when('Client tries to login with name "{name}" and password "{password}"')
 def step_impl(context, name, password):
     context.logged_name = name
-    context.response = requests.post(f"{context.url}/login", json={"name": int(name), "password": password})
+    context.response = requests.post(
+        f"{context.url}/login", json={"name": int(name), "password": password})
 
 
 @when("Client tries to access a secured functionality")
@@ -34,9 +38,11 @@ def step_impl(context):
     response = context.response.json()
     assert_that(context.response.status_code, equal_to(200))
     assert_that(response["token"], not_none())
-    decoded_jwt = jwt.decode(response["token"], "JWT_TOKEN", algorithms=["HS256"])
+    decoded_jwt = jwt.decode(response["token"], os.getenv(
+        "JWT_KEY"), algorithms=["HS256"])
 
-    account = context.query_db(f"SELECT * FROM accounts WHERE name = '{context.logged_name}'")[0]
+    account = context.query_db(
+        f"SELECT * FROM accounts WHERE name = '{context.logged_name}'")[0]
 
     assert_that(decoded_jwt["id"], equal_to(account["id"]))
     assert_that(decoded_jwt["name"], equal_to(account["name"]))

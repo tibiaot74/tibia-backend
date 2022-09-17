@@ -27,6 +27,6 @@ Feature: Register Player
         Then Player creation fails
 
         Examples: Players
-            | name                        | sex    | outfit        |
-            | "Jacinto Leite Aquino Rego" | "Male" | "mage"        |
-            | "Melbi Lau"                 | "Male" | "mage_female" |
+            | name                              | sex    | outfit        |
+            | "Jacinto Pinto Leite Aquino Rego" | "Male" | "mage"        |
+            | "Melbi Lau"                       | "Male" | "mage_female" |
