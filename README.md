@@ -33,9 +33,18 @@ make local-init
 
 **PS**: Although you will be using port 3000 to test the API, it's actually using port 7474, but to speed up the development we are using a tool called `gin` that recompile our code everytime you save any go file and serve as a proxy.
 
-3) Are you done? Destroy everything running:
+3) Create new features or fix bugs
+Now you are free to develop with a simple local setup!
+
+4) Run isolated tests
+```sh
+make  test
+```
+
+5) Are you done? Destroy everything running:
 ```sh
 make local-destroy
+make test-destroy
 ```
 
 ## Running locally (frontend)

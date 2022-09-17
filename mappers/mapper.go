@@ -1,6 +1,7 @@
 package mappers
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 	"tibia-backend/models"
@@ -42,12 +43,12 @@ func OutfitToString(outfit int) string {
 	panic("The given outfitId could not be parsed as string!")
 }
 
-func StringToOutfit(outfit string, sex int) int {
+func StringToOutfit(outfit string, sex int) (int, error) {
 	sexAsString := SexToString(sex)
 	outfit_sex_concat := fmt.Sprintf("%s_%s", strings.ToLower(outfit), sexAsString)
 	outfitAsInt := OutfitMap[outfit_sex_concat].Id
 	if outfitAsInt == 0 {
-		return OutfitMap["citzen_male"].Id
+		return 0, errors.New("The outfit " + outfit + "does not exist!")
 	}
-	return outfitAsInt
+	return outfitAsInt, nil
 }

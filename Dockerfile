@@ -9,6 +9,7 @@ RUN GOOS=linux go build -o app .
 ## Deploy
 FROM alpine:3.16
 WORKDIR /app
+RUN apk add curl
 COPY --from=build /build/app .
 RUN chmod +x ./app
 EXPOSE 7474

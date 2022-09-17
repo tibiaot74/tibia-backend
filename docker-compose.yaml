@@ -13,3 +13,7 @@ services:
       - $DB_PORT:3306
     volumes:
       - ./database/migration:/docker-entrypoint-initdb.d
+    networks:
+      - tibia_backend
+networks:
+  tibia_backend:

@@ -9,7 +9,6 @@ import (
 
 	"tibia-backend/auth"
 	"tibia-backend/mappers"
-	"tibia-backend/models"
 	"tibia-backend/repository"
 	"tibia-backend/requests"
 )
@@ -25,15 +24,6 @@ func hashPassword(providedPassword *string) error {
 	return nil
 }
 
-func hasPlayerWithName(players []models.Player, name *string) bool {
-	for _, player := range players {
-		if player.Name == *name {
-			return true
-		}
-	}
-	return false
-}
-
 // @tags    Account/Login
 // @summary Create user account
 // @param   request body     requests.RegisterAccountRequest true "Params to create account"
@@ -47,8 +37,26 @@ func RegisterAccount(context *gin.Context) {
 		return
 	}
 
+	if len(request.Password) < 6 {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Password length must be at least 6 characters long!"})
+		context.Abort()
+		return
+	}
+
 	if err := hashPassword(&request.Password); err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.Abort()
+		return
+	}
+
+	if _, err := repository.GetAccount(strconv.Itoa(*request.Name)); err == nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Account ID already exists!"})
+		context.Abort()
+		return
+	}
+
+	if _, err := repository.GetAccountByEmail(request.Email); err == nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Email already registered!"})
 		context.Abort()
 		return
 	}
@@ -59,7 +67,7 @@ func RegisterAccount(context *gin.Context) {
 		request.Email,
 	)
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.JSON(http.StatusBadGateway, gin.H{"error": "Account already exists!"})
 		context.Abort()
 		return
 	}
@@ -88,6 +96,19 @@ func RegisterPlayer(context *gin.Context) {
 	claims := auth.GetTokenClaims(context)
 	accountId := claims.Id
 
+	if len(request.Name) > 25 {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Player name should have 25 characters at maximum!"})
+		context.Abort()
+		return
+	}
+
+	outfit, err := mappers.StringToOutfit(request.Outfit, mappers.SexToInt(*request.Sex))
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Provided outfit " + request.Outfit + "is not valid."})
+		context.Abort()
+		return
+	}
+
 	players, err := repository.GetPlayersInAccount(accountId)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": "error fetching players from database"})
@@ -99,8 +120,9 @@ func RegisterPlayer(context *gin.Context) {
 		context.Abort()
 		return
 	}
-	if hasPlayerWithName(players, &request.Name) {
-		context.JSON(http.StatusConflict, gin.H{"error": "player name already exists"})
+
+	if _, err := repository.GetPlayer(request.Name); err == nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Player name " + request.Name + "already exists!"})
 		context.Abort()
 		return
 	}
@@ -109,9 +131,8 @@ func RegisterPlayer(context *gin.Context) {
 		request.Name,
 		accountId,
 		*request.Sex,
-		mappers.StringToOutfit(request.Outfit, mappers.SexToInt(*request.Sex)),
+		outfit,
 	)
-
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		context.Abort()

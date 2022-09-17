@@ -37,7 +37,7 @@ func GenerateToken(context *gin.Context) {
 	}
 	account, err := repository.GetAccount(strconv.Itoa(request.Name))
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		context.JSON(http.StatusNotFound, gin.H{"error": "Invalid account."})
 		context.Abort()
 		return
 	}
@@ -48,7 +48,7 @@ func GenerateToken(context *gin.Context) {
 		return
 	}
 
-	tokenString, err := auth.GenerateJWT(account.Id, account.Name, account.Email)
+	tokenString, err := auth.GenerateJWT(account.Id, account.Email, account.Name)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		context.Abort()
