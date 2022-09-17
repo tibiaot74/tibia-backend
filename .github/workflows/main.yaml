@@ -12,3 +12,32 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Setup Golang
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.19.1"
+
+      - name: Staticcheck
+        run: |
+          go install honnef.co/go/tools/cmd/staticcheck@latest
+          staticcheck .
+
+      - name: Golint
+        run: |
+          go install golang.org/x/lint/golint@latest
+          golint .
+
+      - name: Docker build
+        run: docker build -t tibia-backend .
+      
+      - name: Login to Docker Hub
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: Build, tag, and push docker image to Docker Hub
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker image tag tibia-backend ${{ secrets.DOCKER_USERNAME }}/tibia-backend:$IMAGE_TAG
+          docker push ${{ secrets.DOCKER_USERNAME}}/tibia-backend:$IMAGE_TAG
+          docker image tag tibia-backend ${{ secrets.DOCKER_USERNAME }}/tibia-backend:latest

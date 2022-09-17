@@ -34,7 +34,7 @@ func main() {
 	dbPort := helpers.GetEnv("DB_PORT")
 	dbName := helpers.GetEnv("DB_NAME")
 	// Initialize Database
-	db_connection_string := fmt.Sprintf(
+	DbConnetionString := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?parseTime=true",
 		dbUser,
 		dbPassword,
@@ -42,7 +42,7 @@ func main() {
 		dbPort,
 		dbName,
 	)
-	database.Connect(db_connection_string)
+	database.Connect(DbConnetionString)
 	// Initialize Router
 	router := routes.InitRouter()
 	router.Run(":7474")
