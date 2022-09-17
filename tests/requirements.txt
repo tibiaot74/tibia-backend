@@ -1,0 +1,5 @@
+bcrypt
+behave
+mysql-connector-python
+PyHamcrest
+requests
