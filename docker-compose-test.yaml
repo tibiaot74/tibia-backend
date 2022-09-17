@@ -62,6 +62,7 @@ services:
       DB_USER: root
       DB_PASSWORD: rootpassword
       JWT_KEY: adAm03lpaLa03Gmz1KazA02L1K5K34J20amcA20
+    tty: true
     networks:
       - tibia_backend_test
 networks:
