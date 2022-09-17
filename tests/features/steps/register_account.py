@@ -9,7 +9,6 @@ def step_impl(context, name, email):
     context.query_db(f"DELETE FROM accounts WHERE name = '{name}' OR email = '{email}'")
 
 
-@when('Client creates account with name {name}, email {email} and password "{password}"')
 @when('Client creates account with name "{name}", email "{email}" and password "{password}"')
 def step_impl(context, name, email, password):
     context.response = requests.post(
@@ -34,10 +33,10 @@ def step_impl(context, name, email, password):
     assert_that(response["email"], equal_to(account["email"]))
 
 
-@given("An account with name {name} and email {email} exists")
+@given('An account with name "{name}" and email "{email}" exists')
 def step_impl(context, name, email):
     context.query_db(
-        f"INSERT INTO accounts (`name`, `email`, `password`, `premdays`, `lastday`, `key`, `warnings`, `premium_points`, `backup_points`, `guild_points`, `guild_points_stats`, `blocked`, `group_id`, `vip_time`, `email_new`, `email_new_time`, `email_code`, `next_email`, `created`, `page_lastday`, `page_access`, `rlname`, `location`, `flag`, `last_post`, `create_date`, `create_ip`, `vote`) VALUES ({name}, {email}, '$2a$14$tjDEujQiT8dO662nGdqYgeKJQWnaI9uvboFy1m6mWqcPlTzKjFxUi', 0, 0, '', 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', 0, 0, 0, 0, '', '', '', 0, 0, 0, 0)"
+        f"INSERT INTO accounts (`name`, `email`, `password`, `premdays`, `lastday`, `key`, `warnings`, `premium_points`, `backup_points`, `guild_points`, `guild_points_stats`, `blocked`, `group_id`, `vip_time`, `email_new`, `email_new_time`, `email_code`, `next_email`, `created`, `page_lastday`, `page_access`, `rlname`, `location`, `flag`, `last_post`, `create_date`, `create_ip`, `vote`) VALUES ('{name}', '{email}', '$2a$14$tjDEujQiT8dO662nGdqYgeKJQWnaI9uvboFy1m6mWqcPlTzKjFxUi', 0, 0, '', 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', 0, 0, 0, 0, '', '', '', 0, 0, 0, 0)"
     )
 
 

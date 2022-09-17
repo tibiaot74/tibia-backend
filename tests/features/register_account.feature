@@ -12,11 +12,17 @@ Scenario Outline: Register account that already exists
     Then Account creation fails
     
     Examples: Accounts
-        | name   | email              |
-        | 744774 | other@bol.com.br   |
-        | 101010 | jaspion@bol.com.br |
+        | name     | email                |
+        | "744774" | "other@bol.com.br"   | 
+        | "101010" | "jaspion@bol.com.br" |
 
-Scenario: Register with invalid email
-    Given No account with name "744774" and email "jaspion@bol.com.br" exists
-    When Client creates account with name "744774", email "jaspion" and password "Senha123"
+Scenario Outline: Register with invalid fields
+    Given No account with name <name> and email <email> exists
+    When Client creates account with name <name>, email <email> and password <password>
     Then Account creation fails
+
+    Examples: Accounts
+        | name     | email                | password   |
+        | "74"     | "jaspion@bol.com.br" | "Senha123" |
+        | "744774" | "jaspion"            | "Senha123" |
+        | "744774" | "jaspion@bol.com.br" | "a"        |
