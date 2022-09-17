@@ -15,7 +15,7 @@ Feature: Register Account
             | "744774" | "other@bol.com.br"   |
             | "101010" | "jaspion@bol.com.br" |
 
-    Scenario Outline: Register with invalid fields
+    Scenario Outline: Register account with invalid fields
         Given No account with name <name> and email <email> exists
         When Client creates account with name <name>, email <email> and password <password>
         Then Account creation fails

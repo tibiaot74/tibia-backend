@@ -14,6 +14,8 @@ def step_impl(context, name, password):
     context.session = requests.Session()
     response = context.session.post(f"{context.url}/login", json={"name": int(name), "password": password})
     context.session.headers = {"Authorization": response.json()["token"]}
+    context.raw_jwt = response.json()["token"]
+    context.jwt = jwt.decode(response.json()["token"], "JWT_TOKEN", algorithms=["HS256"])
 
 
 @when('Client tries to login with name "{name}" and password "{password}"')
