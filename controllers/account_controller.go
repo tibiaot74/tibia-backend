@@ -129,7 +129,7 @@ func RegisterPlayer(context *gin.Context) {
 // @tags     Account/Login
 // @summary  Get all players of a specific account
 // @Security ApiKeyAuth
-// @success  200     {object} requests.ListPlayersResponse
+// @success  200 {object} requests.ListPlayersResponse
 // @router   /account/player [get]
 func ListPlayers(context *gin.Context) {
 	claims := auth.GetTokenClaims(context)
