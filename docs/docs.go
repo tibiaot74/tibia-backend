@@ -50,6 +50,25 @@ const docTemplate = `{
             }
         },
         "/account/player": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Account/Login"
+                ],
+                "summary": "Get all players of a specific account",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/requests.ListPlayersResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -166,6 +185,34 @@ const docTemplate = `{
                 }
             }
         },
+        "requests.ListPlayerInfo": {
+            "type": "object",
+            "properties": {
+                "level": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "outfit": {
+                    "type": "string"
+                },
+                "sex": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "requests.ListPlayersResponse": {
+            "type": "object",
+            "properties": {
+                "players": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/requests.ListPlayerInfo"
+                    }
+                }
+            }
+        },
         "requests.RegisterAccountRequest": {
             "type": "object",
             "required": [
@@ -204,14 +251,18 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "name",
+                "outfit",
                 "sex"
             ],
             "properties": {
                 "name": {
                     "type": "string"
                 },
+                "outfit": {
+                    "type": "string"
+                },
                 "sex": {
-                    "type": "integer"
+                    "type": "boolean"
                 }
             }
         },
@@ -219,6 +270,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "name",
+                "outfit",
                 "sex"
             ],
             "properties": {
@@ -228,8 +280,11 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "outfit": {
+                    "type": "string"
+                },
                 "sex": {
-                    "type": "integer"
+                    "type": "boolean"
                 }
             }
         }

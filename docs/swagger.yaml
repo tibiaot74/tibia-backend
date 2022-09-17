@@ -14,6 +14,24 @@ definitions:
       token:
         type: string
     type: object
+  requests.ListPlayerInfo:
+    properties:
+      level:
+        type: integer
+      name:
+        type: string
+      outfit:
+        type: string
+      sex:
+        type: boolean
+    type: object
+  requests.ListPlayersResponse:
+    properties:
+      players:
+        items:
+          $ref: '#/definitions/requests.ListPlayerInfo'
+        type: array
+    type: object
   requests.RegisterAccountRequest:
     properties:
       email:
@@ -41,10 +59,13 @@ definitions:
     properties:
       name:
         type: string
+      outfit:
+        type: string
       sex:
-        type: integer
+        type: boolean
     required:
     - name
+    - outfit
     - sex
     type: object
   requests.RegisterPlayerResponse:
@@ -53,10 +74,13 @@ definitions:
         type: integer
       name:
         type: string
+      outfit:
+        type: string
       sex:
-        type: integer
+        type: boolean
     required:
     - name
+    - outfit
     - sex
     type: object
 host: localhost:7474
@@ -85,6 +109,17 @@ paths:
       tags:
       - Account/Login
   /account/player:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/requests.ListPlayersResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get all players of a specific account
+      tags:
+      - Account/Login
     post:
       parameters:
       - description: Params to create player
