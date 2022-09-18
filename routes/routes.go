@@ -33,7 +33,10 @@ func InitRouter() *gin.Engine {
 			account_secured.POST("/player", controllers.RegisterPlayer)
 			account_secured.GET("/player", controllers.ListPlayers)
 		}
-		api.GET("/ping", controllers.Ping).Use(auth.Auth())
+		base_secured := api.Group("/").Use(auth.Auth())
+		{
+			base_secured.GET("/ping", controllers.Ping)
+		}
 	}
 	return router
 }

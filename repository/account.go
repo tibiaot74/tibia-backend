@@ -61,6 +61,13 @@ func GetAccount(accountName string) (*models.Account, error) {
 	return &account, record.Error
 }
 
+func GetAccountByEmail(email string) (*models.Account, error) {
+	var account models.Account
+
+	record := database.Instance.Where("email = ?", email).First(&account)
+	return &account, record.Error
+}
+
 func RegisterPlayer(
 	name string,
 	account_id int,
