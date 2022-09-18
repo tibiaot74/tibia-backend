@@ -30,3 +30,8 @@ Feature: Register Player
             | name                              | sex    | outfit        |
             | "Jacinto Pinto Leite Aquino Rego" | "Male" | "mage"        |
             | "Melbi Lau"                       | "Male" | "mage_female" |
+
+    Scenario: Create more players than max number of player per account
+        Given Max number of players created for an account
+        When Client tries to create player with name "Jacinto Pinto", sex "Male" and outfit "mage"
+        Then Player creation fails

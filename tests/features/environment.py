@@ -2,11 +2,14 @@ import os
 
 import mysql.connector
 
+from behave.runner import Context
+from behave.model import Scenario
+from typing import List
 
-def before_all(context):
+def before_all(context: Context):
     context.url = "http://api:7474/api"
 
-    def query_db(query):
+    def query_db(query: str) -> List[tuple]:
         connection = mysql.connector.connect(
             host=os.getenv("DB_HOST"),
             user=os.getenv("DB_USER"),
@@ -24,8 +27,8 @@ def before_all(context):
     context.query_db = query_db
 
 
-def after_scenario(context, scenario):
-    tables = [table for tables in context.query_db(
-        "SHOW TABLES") for table in tables.values()]
-    for table in tables:
-        context.query_db(f"DELETE FROM {table}")
+def after_scenario(context: Context, scenario: Scenario):
+    result = context.query_db("SHOW TABLES")
+    for row in result:
+        for _, table in row.items():
+            context.query_db(f"DELETE FROM {table}")
