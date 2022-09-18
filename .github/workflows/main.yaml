@@ -41,7 +41,16 @@ jobs:
         with:
           commit_message: update swagger doc
 
+      - name: Setup environment for running the tests
+        id: setupTestEnvironment
+        run: docker compose -f docker-compose-test.yaml up --build --abort-on-container-exit
+
+      - name: Log docker-compose errors
+        if: steps.setupTestEnvironment.outcome == 'failure'
+        run: docker-compose -f docker-compose-local.yaml logs
+
       - name: Docker build
+        if: ${{ github.ref == 'refs/heads/master' }}
         run: docker build -t tibia-backend .
       
       - name: Login to Docker Hub
