@@ -109,3 +109,10 @@ func GetPlayersInAccount(accountId int) ([]models.Player, error) {
 	records := database.Instance.Where("account_id = ?", accountId).Find(&players)
 	return players, records.Error
 }
+
+func DeletePlayer(id int) error {
+	var player models.Player
+
+	record := database.Instance.Where("id = ?", id).Delete(&player)
+	return record.Error
+}

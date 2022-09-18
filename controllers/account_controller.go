@@ -116,13 +116,13 @@ func RegisterPlayer(context *gin.Context) {
 		return
 	}
 	if len(players) >= MAX_PLAYERS_PER_ACCOUNT {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": "can't have over " + strconv.Itoa(MAX_PLAYERS_PER_ACCOUNT) + " player characters in account"})
+		context.JSON(http.StatusBadRequest, gin.H{"error": "can't have over " + strconv.Itoa(MAX_PLAYERS_PER_ACCOUNT) + " player characters in account"})
 		context.Abort()
 		return
 	}
 
 	if _, err := repository.GetPlayer(request.Name); err == nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Player name " + request.Name + "already exists!"})
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Player name " + request.Name + " already exists!"})
 		context.Abort()
 		return
 	}
@@ -179,4 +179,16 @@ func ListPlayers(context *gin.Context) {
 
 	response.Players = playersInfo
 	context.JSON(http.StatusOK, response)
+}
+
+func DeletePlayer(context *gin.Context) {
+	playerId := context.Param("playerId")
+	playerIdAsInt, _ := strconv.Atoi(playerId)
+
+	if err := repository.DeletePlayer(playerIdAsInt); err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.Abort()
+		return
+	}
+	context.JSON(http.StatusNoContent, nil)
 }

@@ -32,6 +32,7 @@ func InitRouter() *gin.Engine {
 		{
 			account_secured.POST("/player", controllers.RegisterPlayer)
 			account_secured.GET("/player", controllers.ListPlayers)
+			account_secured.DELETE("/player/:playerId", controllers.DeletePlayer)
 		}
 		base_secured := api.Group("/").Use(auth.Auth())
 		{
