@@ -18,7 +18,6 @@ def step_impl(context: Context, name: str, email: str, password: str = "Senha123
         f"INSERT INTO accounts (`name`, `email`, `password`, `premdays`, `lastday`, `key`, `warnings`, `premium_points`, `backup_points`, `guild_points`, `guild_points_stats`, `blocked`, `group_id`, `vip_time`, `email_new`, `email_new_time`, `email_code`, `next_email`, `created`, `page_lastday`, `page_access`, `rlname`, `location`, `flag`, `last_post`, `create_date`, `create_ip`, `vote`) VALUES ('{name}', '{email}', '{pass_hash}', 0, 0, '', 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', 0, 0, 0, 0, '', '', '', 0, 0, 0, 0)"
     )
     result = context.query_db(f"SELECT `id` FROM accounts WHERE `name` = {name}")[0]
-    print(result)
     context.account_id = int(result["id"])
 
 

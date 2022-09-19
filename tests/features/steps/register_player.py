@@ -59,9 +59,6 @@ def step_impl(context: Context, name: str, sex: str, outfit: str):
 @then('Player with name "{name}", sex "{sex}" and outfit "{outfit}" is created in logged account')
 def step_impl(context: Context, name: str, sex: str, outfit: str):
     player = context.query_db(f"SELECT * FROM players WHERE name = '{name}'")[0]
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    print(player)
-    print(player)
     assert_that(player, not_none())
     assert_that(player["name"], equal_to(name))
     assert_that(player["sex"], equal_to(sexToBool(sex)))

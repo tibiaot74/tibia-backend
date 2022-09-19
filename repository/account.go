@@ -96,10 +96,17 @@ func RegisterPlayer(
 	return &player, nil
 }
 
-func GetPlayer(playerName string) (*models.Player, error) {
+func GetPlayerByName(playerName string) (*models.Player, error) {
 	var player models.Player
 
 	record := database.Instance.Where("name = ?", playerName).First(&player)
+	return &player, record.Error
+}
+
+func GetPlayerById(playerId string) (*models.Player, error) {
+	var player models.Player
+
+	record := database.Instance.Where("account_id = ?", playerId).First(&player)
 	return &player, record.Error
 }
 
