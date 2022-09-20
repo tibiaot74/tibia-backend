@@ -113,7 +113,7 @@ func RegisterPlayer(context *gin.Context) {
 		context.Abort()
 		return
 	}
-	if isValidPlayerName(request.Name) == false {
+	if !isValidPlayerName(request.Name) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Player name should contains no only letters without accentuation and numbers!"})
 		context.Abort()
 		return
