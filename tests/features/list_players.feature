@@ -5,10 +5,10 @@ Feature: List Players
         And Client is logged into account of name "744774" with password "Senha123"
 
     Scenario: Account with no players created
-        When List players created in the account
+        When Client tries to list all players in their account
         Then No players are retrieved
 
     Scenario:
         Given A player with name "Jacinto Pinto" exists
-        When List players created in the account
+        When Client tries to list all players in their account
         Then Player named "Jacinto Pinto" is listed

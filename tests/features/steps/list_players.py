@@ -3,7 +3,7 @@ from behave.runner import Context
 from hamcrest import *
 
 
-@when('List players created in the account')
+@when('Client tries to list all players in their account')
 def step_impl(context: Context):
     context.response = context.session.get(
         f"{context.url}/account/player"

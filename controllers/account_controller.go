@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -194,11 +193,8 @@ func DeletePlayer(context *gin.Context) {
 	playerId := context.Param("playerId")
 	playerIdAsInt, _ := strconv.Atoi(playerId)
 
-	playersInAccount, _ := repository.GetPlayerById(strconv.Itoa(accountId))
-	fmt.Println(accountId)
-	fmt.Println(playersInAccount.Id)
-	fmt.Println(playersInAccount.Name)
-	if playersInAccount.Account_id != accountId {
+	player, _ := repository.GetPlayerById(strconv.Itoa(accountId))
+	if player.Account_id != accountId {
 		context.JSON(http.StatusUnauthorized, gin.H{"error": "You can't delete a player that is not associated with your account."})
 		context.Abort()
 		return
