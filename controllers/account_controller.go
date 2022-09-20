@@ -184,7 +184,7 @@ func ListPlayers(context *gin.Context) {
 // @tags     Account/Login
 // @summary  Delete a player
 // @Security ApiKeyAuth
-// @param    player_id path     int true "Id of the player to delete"
+// @param    player_id path int true "Id of the player to delete"
 // @success  204
 // @router   /account/player/{player_id} [delete]
 func DeletePlayer(context *gin.Context) {
