@@ -121,8 +121,8 @@ func RegisterPlayer(context *gin.Context) {
 	claims := auth.GetTokenClaims(context)
 	accountId := claims.Id
 
-	if len(request.Name) > 25 {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Player name should have 25 characters at maximum!"})
+	if len(request.Name) > 20 && len(request.Name) < 3 {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Player name should have at least 3 and at max 20 characters at maximum!"})
 		context.Abort()
 		return
 	}
