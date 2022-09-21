@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"strconv"
+	"unicode"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -24,6 +25,30 @@ func hashPassword(providedPassword *string) error {
 	return nil
 }
 
+func validatePasswordMinRequirements(providedPassword string) bool {
+	hasUppercase, hasNumber, hasLowercase := false, false, false
+	for _, char := range providedPassword {
+		if unicode.IsNumber(char) {
+			hasNumber = true
+		}
+		if unicode.IsLower(char) {
+			hasLowercase = true
+		}
+		if unicode.IsUpper(char) {
+			hasUppercase = true
+		}
+	}
+	validLenght := false
+	if len(providedPassword) >= 6 && len(providedPassword) <= 40 {
+		validLenght = true
+	}
+
+	if hasUppercase && hasNumber && hasLowercase && validLenght {
+		return true
+	}
+	return false
+}
+
 // @tags    Account/Login
 // @summary Create user account
 // @param   request body     requests.RegisterAccountRequest true "Params to create account"
@@ -37,8 +62,8 @@ func RegisterAccount(context *gin.Context) {
 		return
 	}
 
-	if len(request.Password) < 6 {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Password length must be at least 6 characters long!"})
+	if !validatePasswordMinRequirements(request.Password) {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Password should be 6 to 40 characters long and should have at least one uppercase letter, one lowercase letter, one special letter (!@#$&*) and one number!"})
 		context.Abort()
 		return
 	}
