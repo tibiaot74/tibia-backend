@@ -88,6 +88,10 @@ func RegisterPlayer(
 	player.Signature = ""
 	player.CastDescription = ""
 	player.Level = 1
+	player.Town_id = 12
+	player.Health = 150
+	player.Healthmax = 150
+	player.Cap = 400
 
 	record := database.Instance.Create(&player)
 	if record.Error != nil {
