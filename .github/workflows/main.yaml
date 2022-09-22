@@ -65,3 +65,4 @@ jobs:
           docker image tag tibia-backend ${{ secrets.DOCKER_USERNAME }}/tibia-backend:$IMAGE_TAG
           docker push ${{ secrets.DOCKER_USERNAME}}/tibia-backend:$IMAGE_TAG
           docker image tag tibia-backend ${{ secrets.DOCKER_USERNAME }}/tibia-backend:latest
+          docker push ${{ secrets.DOCKER_USERNAME}}/server:latest
