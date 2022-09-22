@@ -30,4 +30,5 @@ Feature: Register Player
             | name                              | sex    | outfit        |
             | "Jacinto Pinto Leite Aquino Rego" | "Male" | "mage"        |
             | "Melbi Lau"                       | "Male" | "mage_female" |
-            | "João Mala Sem Alça"              | "Male" | "mage" |
+            | "Oi"                              | "Male" | "mage"        |
+            | "João Mala Sem Alça"              | "Male" | "mage"        |
