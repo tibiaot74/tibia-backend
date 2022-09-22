@@ -1,9 +1,12 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
+	"regexp"
 	"strconv"
 	"unicode"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -28,7 +31,8 @@ func hashPassword(providedPassword *string) error {
 func validatePasswordMinRequirements(providedPassword string) bool {
 	hasUppercase, hasNumber, hasLowercase := false, false, false
 	for _, char := range providedPassword {
-		if unicode.IsNumber(char) {
+		if 
+    .IsNumber(char) {
 			hasNumber = true
 		}
 		if unicode.IsLower(char) {
@@ -105,6 +109,16 @@ func RegisterAccount(context *gin.Context) {
 	context.JSON(http.StatusCreated, response)
 }
 
+func isValidPlayerName(playerName string) bool {
+	fmt.Println(playerName)
+	regex, _ := regexp.Compile("[A-Za-z0-9 ]")
+	playerNameValidatedByRegexAsSlice := regex.FindAllString(playerName, -1)
+	playerNameValidatedByRegex := 
+  .Join(playerNameValidatedByRegexAsSlice[:], "")
+
+	return playerNameValidatedByRegex == playerName
+}
+
 // @tags     Account/Login
 // @summary  Create player
 // @Security ApiKeyAuth
@@ -123,6 +137,11 @@ func RegisterPlayer(context *gin.Context) {
 
 	if len(request.Name) > 20 || len(request.Name) < 3 {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Player name should have at least 3 and at max 20 characters at maximum!"})
+		context.Abort()
+		return
+	}
+	if !isValidPlayerName(request.Name) {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Player name should contains no only letters without accentuation and numbers!"})
 		context.Abort()
 		return
 	}

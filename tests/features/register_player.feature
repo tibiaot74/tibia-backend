@@ -10,11 +10,11 @@ Feature: Register Player
         Then Player with name <name>, sex <sex> and outfit <outfit> is created in logged account
 
         Examples: Players
-            | name           | sex      | outfit   |
-            | "Talin Rabano" | "Male"   | "mage"   |
-            | "Paula Tejano" | "Female" | "hunter" |
-            | "Levi Adão "   | "Male"   | "noble"  |
-            | "Cuca Beludo " | "Male"   | "knight" |
+            | name            | sex      | outfit   |
+            | "Talin Rabano"  | "Male"   | "mage"   |
+            | "Paula Tejano"  | "Female" | "hunter" |
+            | "Tomei Norabu " | "Male"   | "noble"  |
+            | "Cuca Beludo "  | "Male"   | "knight" |
 
     Scenario: Register player that already exists
         Given A player with name "Jacinto Pinto" exists
@@ -31,3 +31,4 @@ Feature: Register Player
             | "Jacinto Pinto Leite Aquino Rego" | "Male" | "mage"        |
             | "Melbi Lau"                       | "Male" | "mage_female" |
             | "Oi"                              | "Male" | "mage"        |
+            | "João Mala Sem Alça"              | "Male" | "mage"        |
