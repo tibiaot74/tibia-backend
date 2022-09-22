@@ -87,6 +87,7 @@ func RegisterPlayer(
 	player.Comment = ""
 	player.Signature = ""
 	player.CastDescription = ""
+	player.Level = 1
 
 	record := database.Instance.Create(&player)
 	if record.Error != nil {
