@@ -138,6 +138,22 @@ paths:
       summary: Create player
       tags:
       - Account/Login
+  /account/player/{player_id}:
+    delete:
+      parameters:
+      - description: Id of the player to delete
+        in: path
+        name: player_id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a player
+      tags:
+      - Account/Login
   /health:
     get:
       responses:

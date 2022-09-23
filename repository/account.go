@@ -101,10 +101,17 @@ func RegisterPlayer(
 	return &player, nil
 }
 
-func GetPlayer(playerName string) (*models.Player, error) {
+func GetPlayerByName(playerName string) (*models.Player, error) {
 	var player models.Player
 
 	record := database.Instance.Where("name = ?", playerName).First(&player)
+	return &player, record.Error
+}
+
+func GetPlayerById(playerId string) (*models.Player, error) {
+	var player models.Player
+
+	record := database.Instance.Where("account_id = ?", playerId).First(&player)
 	return &player, record.Error
 }
 
@@ -113,4 +120,11 @@ func GetPlayersInAccount(accountId int) ([]models.Player, error) {
 
 	records := database.Instance.Where("account_id = ?", accountId).Find(&players)
 	return players, records.Error
+}
+
+func DeletePlayer(id int) error {
+	var player models.Player
+
+	record := database.Instance.Where("id = ?", id).Delete(&player)
+	return record.Error
 }

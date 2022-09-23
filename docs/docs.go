@@ -100,6 +100,33 @@ const docTemplate = `{
                 }
             }
         },
+        "/account/player/{player_id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "Account/Login"
+                ],
+                "summary": "Delete a player",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id of the player to delete",
+                        "name": "player_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
         "/health": {
             "get": {
                 "tags": [

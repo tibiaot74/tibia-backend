@@ -133,13 +133,13 @@ func RegisterPlayer(context *gin.Context) {
 		return
 	}
 	if len(players) >= MAX_PLAYERS_PER_ACCOUNT {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": "can't have over " + strconv.Itoa(MAX_PLAYERS_PER_ACCOUNT) + " player characters in account"})
+		context.JSON(http.StatusBadRequest, gin.H{"error": "can't have over " + strconv.Itoa(MAX_PLAYERS_PER_ACCOUNT) + " player characters in account"})
 		context.Abort()
 		return
 	}
 
-	if _, err := repository.GetPlayer(request.Name); err == nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Player name " + request.Name + "already exists!"})
+	if _, err := repository.GetPlayerByName(request.Name); err == nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Player name " + request.Name + " already exists!"})
 		context.Abort()
 		return
 	}
@@ -196,4 +196,31 @@ func ListPlayers(context *gin.Context) {
 
 	response.Players = playersInfo
 	context.JSON(http.StatusOK, response)
+}
+
+// @tags     Account/Login
+// @summary  Delete a player
+// @Security ApiKeyAuth
+// @param    player_id path int true "Id of the player to delete"
+// @success  204
+// @router   /account/player/{player_id} [delete]
+func DeletePlayer(context *gin.Context) {
+	claims := auth.GetTokenClaims(context)
+	accountId := claims.Id
+	playerId := context.Param("playerId")
+	playerIdAsInt, _ := strconv.Atoi(playerId)
+
+	player, _ := repository.GetPlayerById(strconv.Itoa(accountId))
+	if player.Account_id != accountId {
+		context.JSON(http.StatusUnauthorized, gin.H{"error": "You can't delete a player that is not associated with your account."})
+		context.Abort()
+		return
+	}
+
+	if err := repository.DeletePlayer(playerIdAsInt); err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.Abort()
+		return
+	}
+	context.JSON(http.StatusNoContent, nil)
 }
