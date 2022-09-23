@@ -97,9 +97,9 @@ func RegisterPlayer(
 	player.Vocation = 0
 	player.Soul = 100
 	player.Stamina = 201660000
-	player.exphist5 = ""
+	player.Exphist5 = ""
 	player.Old_name = ""
-	player.create_date = 1470516668
+	player.Create_date = 1470516668
 
 	record := database.Instance.Create(&player)
 	if record.Error != nil {
