@@ -78,6 +78,7 @@ func RegisterPlayer(
 
 	player.Name = name
 	player.Account_id = account_id
+	player.Group_id = 2
 	player.Conditions = ""
 	player.Sex = mappers.SexToInt(sex)
 	player.Looktype = outfit
