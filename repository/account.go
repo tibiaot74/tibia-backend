@@ -97,7 +97,6 @@ func RegisterPlayer(
 	player.Vocation = 0
 	player.Soul = 100
 	player.Stamina = 201660000
-	player.Exphist5 = ""
 	player.Old_name = ""
 	player.Create_date = 1470516668
 
