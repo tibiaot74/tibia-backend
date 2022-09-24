@@ -164,7 +164,7 @@ func RegisterPlayer(
 	player.Offlinetraining_skill = 0
 	player.Broadcasting = 0
 	player.Viewers = 0
-	player.Ip = 0
+	player.Ip = "0"
 
 	record := database.Instance.Create(&player)
 	if record.Error != nil {
