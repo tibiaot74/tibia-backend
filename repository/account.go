@@ -29,7 +29,7 @@ func RegisterAccount(
 	account.GuildPoints = 0
 	account.GuildPointsStats = 0
 	account.Blocked = 0
-	account.GroupId = 0
+	account.GroupId = 1
 	account.VipTime = 0
 	account.EmailNew = ""
 	account.EmailNewTime = 0
@@ -99,7 +99,7 @@ func RegisterPlayer(
 	player.Soul = 100
 	player.Town_id = 12
 	player.Posx = 32097
-	player.Posy = 32221
+	player.Posy = 32219
 	player.Posz = 7
 	player.Conditions = ""
 	player.Cap = 400
